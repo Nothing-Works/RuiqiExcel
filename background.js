@@ -3,9 +3,10 @@ const activeWindow= {
   active: true
 }
 const version = "1.0";
+const checkInId= 5;
 const url="https://app2.rmscloud.com/api/Reservation/InOutScreen/RetrieveScreenData";
-let data;
-let request;
+let data=[];
+let request={};
 let currentTabId;
 
 chrome.runtime.onInstalled.addListener(()=> {
@@ -25,7 +26,7 @@ chrome.runtime.onInstalled.addListener(()=> {
         currentTab(attachDebugger())
   }
     else if (message==='download') {
-      currentTab(sendMessage())
+        currentTab(sendMessage())        
     }
 });
 });
@@ -63,24 +64,21 @@ function onAttach(tabId) {
 }
 
 function allEventHandler(debuggeeId, message, params) {
-    if (currentTabId != debuggeeId.tabId) return
+  if (currentTabId != debuggeeId.tabId) return
     if (message == "Network.responseReceived") {
+      if (request.id===checkInId)
         chrome.debugger.sendCommand(
           {tabId: debuggeeId.tabId}, 
           "Network.getResponseBody", 
           {"requestId": params.requestId}, 
-          ({body})=> mapData(body));
+          ({body})=> mapData(body))
     }
 }
 
 function mapData(body) {
     const dataObj = tryJSON(body);
     if (dataObj) {
-      const collection = dataObj.InOutData
-      const views = dataObj.InOutViews
-      const count = views.filter(v=>v.Id==5)[0].Total
-      if (collection && collection.length==count) {
-        data = collection.map(c=>({
+        data = dataObj.map(c=>({
           'Rs No':c.ResId,
           'Email':c.Email,
           'Mobile':c.Mobile,
@@ -88,7 +86,6 @@ function mapData(body) {
           'First Name':c.Given,
           'Town':c.Town
         }));
-      }  
     }
 }
 
@@ -98,8 +95,8 @@ function tryJSON(text){
   }
   try{
     const obj = JSON.parse(text)
-    if (obj.InOutViews && obj.InOutData) {
-      return obj;
+    if (obj && obj.InOutData) {
+      return obj.InOutData;
     }
     return false;
   }
@@ -109,8 +106,8 @@ function tryJSON(text){
 }
 
 function getHotelName(idArray) {
-  if (idArray.length!==1) return
-  const id = idArray[0]
+  if (idArray.length!==1) return 'all'
+  const id= idArray[0]
   switch (id) {
     case 1:
       return 'laneway backpackers'
@@ -123,7 +120,7 @@ function getHotelName(idArray) {
     case 3:
         return 'the set up on manners'
     default:
-        console.log('something is wrong')
+      return 'all'
   }
 }
 
@@ -134,6 +131,7 @@ function getDateAndHotel(data) {
   return {
    start:obj.FromDate,
    end:obj.ToDate,
-   hotel:getHotelName(obj.Properties)
+   hotel:getHotelName(obj.Properties),
+   id:obj.ReportView
   }
 }
