@@ -7,7 +7,7 @@
     "activeTab",
     "debugger",
     "webRequest",
-    "<all_urls>"
+    "https://app2.rmscloud.com/*"
   ],
   "description": "Build an Extension for Getting RMS Data",
   "page_action": {
