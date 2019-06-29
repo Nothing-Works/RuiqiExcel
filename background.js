@@ -25,10 +25,15 @@ chrome.runtime.onInstalled.addListener(()=> {
         currentTab(attachDebugger())
   }
     else if (message==='download') {
-        currentTab(sendMessage())
+      currentTab(sendMessage())
     }
 });
 });
+
+function cleanUp() {
+  data= []
+  request = {}
+}
 
 function requestListener() {
   chrome.webRequest.onBeforeRequest.addListener((data)=> {
@@ -44,12 +49,12 @@ function currentTab(callback) {
   })
 }
 
-function attachDebugger() {
+ function attachDebugger() {
   return tabId => chrome.debugger.attach({tabId}, version, onAttach.bind(null, tabId));
 }
 
-function sendMessage() {
-  return id => chrome.tabs.sendMessage(id, {data,request})
+ function sendMessage () {
+  return id => chrome.tabs.sendMessage(id, {data,request} , response => response.done ? cleanUp(): null)
 }
 
 function onAttach(tabId) {
@@ -71,7 +76,6 @@ function allEventHandler(debuggeeId, message, params) {
 function mapData(body) {
     const dataObj = tryJSON(body);
     if (dataObj) {
-      console.log(dataObj);
       const collection = dataObj.InOutData
       const views = dataObj.InOutViews
       const count = views.filter(v=>v.Id==5)[0].Total
@@ -93,7 +97,11 @@ function tryJSON(text){
       return false;
   }
   try{
-    return JSON.parse(text)
+    const obj = JSON.parse(text)
+    if (obj.InOutViews && obj.InOutData) {
+      return obj;
+    }
+    return false;
   }
   catch (error){
       return false;
