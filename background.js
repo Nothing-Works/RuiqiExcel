@@ -20,6 +20,8 @@ chrome.runtime.onInstalled.addListener(()=> {
     }]);
   });
 
+  chrome.debugger.onDetach.addListener(()=>cleanUp())
+
   chrome.runtime.onMessage.addListener((message)=> {
     if (message==='start') {
         requestListener()
