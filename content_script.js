@@ -1,7 +1,3 @@
-const date = new Date()
-
-const time = () => `${date.getMonth()+1}_${date.getDate()}_${date.getHours()}_${date.getMinutes()}`
-
 chrome.runtime.onMessage.addListener((response, sender, sendResponse) =>send(response,sendResponse))
 
 function send(response,sendResponse) {
@@ -15,4 +11,9 @@ function send(response,sendResponse) {
         xls.exportToXLS(`${time()}+${request.hotel}+${request.start}+${request.end}.xls`)
         sendResponse({done: true})
     }
+}
+
+function time() {
+    const date = new Date()
+    return `${date.getMonth()+1}_${date.getDate()}_${date.getHours()}_${date.getMinutes()}`
 }
