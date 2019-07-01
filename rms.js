@@ -2,6 +2,7 @@ class RMS{
     constructor() {
         this.data=[]
         this.request={}
+        this.currentTabId
     }
 
     get activeWindow() {
@@ -40,9 +41,9 @@ class RMS{
     }
 
     getDateAndHotel(data) {
-        const buffer = data.requestBody.raw[0].bytes;
-        const payloadString = decodeURIComponent(String.fromCharCode.apply(null,new Uint8Array(buffer)));
-        const obj= JSON.parse(payloadString);
+        const buffer = data.requestBody.raw[0].bytes
+        const payloadString = decodeURIComponent(String.fromCharCode.apply(null,new Uint8Array(buffer)))
+        const obj= JSON.parse(payloadString)
         return {
          start:obj.FromDate,
          end:obj.ToDate,
@@ -75,7 +76,7 @@ class RMS{
       }
 
       mapData(body) {
-        const dataObj = this.tryJSON(body);
+        const dataObj = this.tryJSON(body)
         if (dataObj) {
             this.data = dataObj.map(c=>({
               'Rs No':c.ResId,
@@ -84,23 +85,23 @@ class RMS{
               'Last Name':c.Surname,
               'First Name':c.Given,
               'Town':c.Town
-            }));
+            }))
         }
       }
 
       tryJSON(text){
         if (typeof text!=='string'){
-            return false;
+            return false
         }
         try{
           const obj = JSON.parse(text)
           if (obj && obj.InOutData) {
-            return obj.InOutData;
+            return obj.InOutData
           }
-          return false;
+          return false
         }
         catch (error){
-            return false;
+            return false
         }
       }
 }

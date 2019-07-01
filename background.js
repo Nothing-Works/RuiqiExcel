@@ -1,5 +1,3 @@
-let currentTabId;
-
 const rms= new RMS()
 
 chrome.runtime.onInstalled.addListener(()=> {
@@ -35,8 +33,8 @@ function requestListener() {
 
 function currentTab(callback) {
   chrome.tabs.query(rms.activeWindow, (tabArray)=> {
-    currentTabId = tabArray[0].id
-    callback(currentTabId)
+    rms.currentTabId = tabArray[0].id
+    callback(rms.currentTabId)
   })
 }
 
@@ -54,11 +52,11 @@ function onAttach(tabId) {
 }
 
 function allEventHandler(debuggeeId, message, params) {
-  if (currentTabId != debuggeeId.tabId) return
+  if (rms.currentTabId != debuggeeId.tabId) return
     if (message == "Network.responseReceived") {
       if(rms.isCheckIn())
         chrome.debugger.sendCommand(
-          {tabId: debuggeeId.tabId}, 
+        {tabId: debuggeeId.tabId}, 
           "Network.getResponseBody", 
           {"requestId": params.requestId}, 
           ({body})=> rms.mapData(body))
