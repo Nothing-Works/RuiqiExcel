@@ -1,4 +1,8 @@
 class RMS{
+    dateOptions ={
+      local: 'en-NZ',
+      options: { year: 'numeric', month: 'short', day: '2-digit' ,hour:'2-digit' , minute: '2-digit'}
+    }
     constructor() {
         this.data=[]
         this.request={}
@@ -84,7 +88,9 @@ class RMS{
               'Mobile':c.Mobile,
               'Last Name':c.Surname,
               'First Name':c.Given,
-              'Town':c.Town
+              'Town':c.Town,
+              'Arrive':this.formatDate(c.Arrive),
+              'Depart':this.formatDate(c.Depart)
             }))
         }
       }
@@ -103,5 +109,9 @@ class RMS{
         catch (error){
             return false
         }
+      }
+
+      formatDate(date) {
+            return new Date(date).toLocaleDateString(this.dateOptions.local, this.dateOptions.options)
       }
 }
