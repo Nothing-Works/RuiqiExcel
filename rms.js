@@ -13,13 +13,14 @@ class RMS{
 
   selectFields = record => ({
       'Rs No':record.ResId,
+      'Arrive':this.formatDate(record.Arrive),
+      'Depart':this.formatDate(record.Depart),
       'Email':record.Email,
       'Mobile':record.Mobile,
       'Last Name':record.Surname,
       'First Name':record.Given,
-      'Town':record.Town,
-      'Arrive':this.formatDate(record.Arrive),
-      'Depart':this.formatDate(record.Depart)
+      'Title':record.Title,
+      'Town':record.Town
     })
 
     get activeWindow() {
