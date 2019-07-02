@@ -19,7 +19,7 @@ chrome.runtime.onInstalled.addListener(()=> {
         currentTab(attachDebugger())
   }
     else if (message==='download') {
-        currentTab(sendMessage())        
+        currentTab(sendMessage())
     }
 });
 });
@@ -56,9 +56,9 @@ function allEventHandler(debuggeeId, message, params) {
     if (message == "Network.responseReceived") {
       if(rms.isCheckIn())
         chrome.debugger.sendCommand(
-        {tabId: debuggeeId.tabId}, 
-          "Network.getResponseBody", 
-          {"requestId": params.requestId}, 
-          ({body})=> rms.mapData(body))
+        {tabId: debuggeeId.tabId},
+          "Network.getResponseBody",
+          {"requestId": params.requestId},
+          rms.processData())
     }
 }

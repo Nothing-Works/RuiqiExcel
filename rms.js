@@ -1,13 +1,26 @@
 class RMS{
-    dateOptions ={
+
+  constructor() {
+    this.data=[]
+    this.request={}
+    this.currentTabId
+  }
+
+  dateOptions ={
       local: 'en-NZ',
       options: { year: 'numeric', month: 'short', day: '2-digit' ,hour:'2-digit' , minute: '2-digit'}
-    }
-    constructor() {
-        this.data=[]
-        this.request={}
-        this.currentTabId
-    }
+  }
+
+  selectFields = record => ({
+      'Rs No':record.ResId,
+      'Email':record.Email,
+      'Mobile':record.Mobile,
+      'Last Name':record.Surname,
+      'First Name':record.Given,
+      'Town':record.Town,
+      'Arrive':this.formatDate(record.Arrive),
+      'Depart':this.formatDate(record.Depart)
+    })
 
     get activeWindow() {
         return {
@@ -60,38 +73,11 @@ class RMS{
        return this.request.id === this.checkInId
       }
 
-       getHotelName(idArray) {
-        if (idArray.length!==1) return 'all'
-        const id= idArray[0]
-        switch (id) {
-          case 1:
-            return 'laneway backpackers'
-          case 2:
-              return 'liberty apartment hotel'
-          case 4:
-              return 'the setup on dixon'
-          case 5:
-              return 'the setup on dixon apartment'
-          case 3:
-              return 'the set up on manners'
-          default:
-            return 'all'
-        }
-      }
-
-      mapData(body) {
-        const dataObj = this.tryJSON(body)
-        if (dataObj) {
-            this.data = dataObj.map(c=>({
-              'Rs No':c.ResId,
-              'Email':c.Email,
-              'Mobile':c.Mobile,
-              'Last Name':c.Surname,
-              'First Name':c.Given,
-              'Town':c.Town,
-              'Arrive':this.formatDate(c.Arrive),
-              'Depart':this.formatDate(c.Depart)
-            }))
+      processData() {
+        return ({body}) => {
+          const dataObj = this.tryJSON(body)
+          if (dataObj)
+              this.data = dataObj.map(this.selectFields)
         }
       }
 
@@ -113,5 +99,24 @@ class RMS{
 
       formatDate(date) {
             return new Date(date).toLocaleDateString(this.dateOptions.local, this.dateOptions.options)
+      }
+
+      getHotelName(idArray) {
+        if (idArray.length!==1) return 'all'
+        const id= idArray[0]
+        switch (id) {
+          case 1:
+            return 'laneway backpackers'
+          case 2:
+              return 'liberty apartment hotel'
+          case 4:
+              return 'the setup on dixon'
+          case 5:
+              return 'the setup on dixon apartment'
+          case 3:
+              return 'the set up on manners'
+          default:
+            return 'all'
+        }
       }
 }
