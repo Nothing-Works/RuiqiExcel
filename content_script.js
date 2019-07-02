@@ -5,7 +5,7 @@ function send(response,sendResponse) {
     if (data.length === 0 || typeof data === 'undefined') {
         alert('There is no data')
         sendResponse({done: false})
-    } 
+    }
     else{
         const xls = new XlsExport(data)
         xls.exportToXLS(`${time()}+${request.hotel}+${request.start}+${request.end}.xls`)
