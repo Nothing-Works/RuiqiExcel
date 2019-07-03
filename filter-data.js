@@ -8,12 +8,21 @@ class FilterData{
     meta= {
         total:'',
         unique:'',
-        final:''
+        hasData:''
     }
 
     init(data) {
         this.data = data
         this.setMeta('total', this.data.length)
+    }
+
+    removeNoData() {
+        this.data = this.data.filter(this.hasData)
+        this.setMeta('hasData', this.data.length)
+    }
+
+    hasData() {
+        return true;
     }
 
     removeDuplications() {
@@ -44,11 +53,12 @@ class FilterData{
 
     final() {
         this.removeDuplications()
+        this.removeNoData()
         this.removeInvalidEmails()
         return this.combine()
     }
 
-    combine(){
+    combine() {
         return [...this.data, this.meta]
     }
 }
