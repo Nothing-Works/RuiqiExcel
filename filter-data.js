@@ -13,16 +13,21 @@ class FilterData{
 
     init(data) {
         this.data = data
+        this.trimAllData()
         this.setMeta('total', this.data.length)
+    }
+
+    trimAllData() {
+        this.data.forEach(c=> (
+            Object.keys(c).forEach(key=> (
+                c[key] = typeof c[key] === 'string' ? c[key].trim() : c[key]
+                ))
+            ))
     }
 
     removeNoData() {
         this.data = this.data.filter(this.hasData)
         this.setMeta('hasData', this.data.length)
-    }
-
-    hasData() {
-        return true;
     }
 
     removeDuplications() {
@@ -36,13 +41,21 @@ class FilterData{
           t.Mobile === c.Mobile &&
           t['Last Name'] === c['Last Name'] &&
           t['First Name'] === c['First Name']) === i
-      }
+    }
+
+    hasData() {
+        return true;
+    }
+
+    invalidEmails(email) {
+        return this.invalidEmailREX.test(email) || email == '.'
+    }
 
     removeInvalidEmails() {
         this.data = this.data.map(c => (
             {
                 ...c,
-               Email: this.invalidEmailREX.test(c.Email) ? '' : c.Email
+               Email: this.invalidEmails(c.Email) ? '' : c.Email
             }
         ))
     }
