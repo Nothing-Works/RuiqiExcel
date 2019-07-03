@@ -7,7 +7,8 @@ function send(response,sendResponse) {
         sendResponse({done: false})
     }
     else{
-        const xls = new XlsExport(data)
+        const filterData= new FilterData(data)
+        const xls = new XlsExport(filterData.final())
         xls.exportToXLS(`${time()}+${request.hotel}+${request.start}+${request.end}.xls`)
         sendResponse({done: true})
     }

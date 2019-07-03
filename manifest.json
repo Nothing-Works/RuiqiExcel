@@ -31,7 +31,7 @@
   "content_scripts": [
     {
       "matches": ["https://app2.rmscloud.com/*"],
-      "js": ["xls-export.js", "content_script.js"]
+      "js": ["filter-data.js", "xls-export.js", "content_script.js"]
     }
   ]
 }
