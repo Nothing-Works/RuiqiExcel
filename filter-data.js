@@ -1,5 +1,5 @@
 class FilterData{
-    invalidEmailREX = new RegExp('^.*@guest.booking.com|feedback@booking.com.*$','igm')
+    invalidEmailREX = new RegExp('^.*@guest.booking.com|.|feedback@booking.com.*$','igm')
 
     constructor(data){
         this.init(data)
@@ -47,8 +47,12 @@ class FilterData{
         return true;
     }
 
+    invalidValue(value) {
+       return value == '.' || value == '' || value == null || typeof value == 'undefined'
+    }
+
     invalidEmails(email) {
-        return this.invalidEmailREX.test(email) || email == '.'
+        return this.invalidEmailREX.test(email)
     }
 
     removeInvalidEmails() {
