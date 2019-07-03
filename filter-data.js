@@ -1,7 +1,5 @@
 class FilterData{
-    invalidEmailREX = new RegExp('^.*@guest.booking.com|.|feedback@booking.com.*$','igm')
-
-    constructor(data){
+    constructor(data) {
         this.init(data)
     }
 
@@ -26,17 +24,17 @@ class FilterData{
     }
 
     removeNoData() {
-        this.data = this.data.filter(this.hasData)
+        this.data = this.data.filter(this.hasData())
         this.setMeta('hasData', this.data.length)
     }
 
     removeDuplications() {
-      this.data = this.data.filter(this.isUnique)
+      this.data = this.data.filter(this.isUnique())
       this.setMeta('unique', this.data.length)
     }
 
-    isUnique(c, i, self) {
-        return self.findIndex(t =>
+    isUnique() {
+        return (c, i, self)=> self.findIndex(t =>
           t.Email === c.Email &&
           t.Mobile === c.Mobile &&
           t['Last Name'] === c['Last Name'] &&
@@ -44,24 +42,24 @@ class FilterData{
     }
 
     hasData() {
-        return true;
+        return c=> !(this.invalidValue(c.Email) && this.invalidValue(c.Mobile) && this.invalidValue(c['Last Name']) && this.invalidValue(c['First Name']))
     }
 
     invalidValue(value) {
-       return value == '.' || value == '' || value == null || typeof value == 'undefined'
+       return value == '.' || value == '' || value == null || typeof value == 'undefined' || value == '/'
     }
 
     invalidEmails(email) {
-        return this.invalidEmailREX.test(email)
+        return email.includes('@guest.booking.com') || email.includes('feedback@booking.com') || email == '.'
     }
 
     removeInvalidEmails() {
         this.data = this.data.map(c => (
             {
                 ...c,
-               Email: this.invalidEmails(c.Email) ? '' : c.Email
+                Email: this.invalidEmails(c.Email) ? '' : c.Email
             }
-        ))
+            ))
     }
 
     setMeta(key, value) {
