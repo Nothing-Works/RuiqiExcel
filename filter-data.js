@@ -54,12 +54,11 @@ class FilterData{
     }
 
     removeInvalidEmails() {
-        this.data = this.data.map(c => (
+        this.data = this.data.map(c=> (
             {
                 ...c,
                 Email: this.invalidEmails(c.Email) ? '' : c.Email
-            }
-            ))
+            }))
     }
 
     setMeta(key, value) {
