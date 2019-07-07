@@ -53,11 +53,13 @@ class FilterData{
         return email.includes('@guest.booking.com') || email.includes('feedback@booking.com') || email == '.'
     }
 
-    removeInvalidEmails() {
+    removeInvalidValues() {
         this.data = this.data.map(c=> (
             {
                 ...c,
-                Email: this.invalidEmails(c.Email) ? '' : c.Email
+                Email: this.invalidEmails(c.Email) ? '' : c.Email,
+                Mobile: this.invalidValue(c.Mobile) ? '' : c.Mobile,
+                Town: this.invalidValue(c.Town) ? '' : c.Town
             }))
     }
 
@@ -68,7 +70,7 @@ class FilterData{
     final() {
         this.removeDuplications()
         this.removeNoData()
-        this.removeInvalidEmails()
+        this.removeInvalidValues()
         return this.combine()
     }
 
