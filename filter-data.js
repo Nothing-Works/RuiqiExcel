@@ -42,7 +42,7 @@ class FilterData{
     }
 
     hasData() {
-        return c=> !(this.invalidValue(c.Email) && this.invalidValue(c.Mobile) && this.invalidValue(c['Last Name']) && this.invalidValue(c['First Name']))
+        return c=> !(this.invalidValue(c.Email) && this.invalidValue(c.Mobile) && this.invalidValue(c.Town))
     }
 
     invalidValue(value) {
